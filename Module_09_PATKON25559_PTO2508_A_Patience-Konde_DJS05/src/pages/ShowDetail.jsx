@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 
 // API and UI Imports (Adjust relative paths if your folders differ)
 import { fetchShowById } from '../../api/fetchData'; 
+import GenreTag from '../components/UI/GenreTag';
 import Loading from '../UI/Loading';
 import Error from '../UI/Error';
 import styles from './ShowDetail.module.css';
@@ -13,6 +14,7 @@ export default function ShowDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openSeason, setOpenSeason] = useState(null);
+  const [selectedEpisode, setSelectedEpisode] = useState(null);
 
   // Triggers the imported fetch helper whenever the ID changes
   useEffect(() => {
@@ -23,64 +25,141 @@ export default function ShowDetail() {
   if (error) return <Error message={error} />;
   if (!show) return <Error message="No show data discovered." />;
 
-  return (
+   return (
     <div className={styles.container}>
-      {/* Back link navigation */}
-      <Link to="/" className={styles.backLink}>
-        ← Back to All Shows
-      </Link>
+      
+      {/* 1. Circular Back Link Button */}
+      <div className={styles.backLinkContainer}>
+        <Link to="/" className={styles.backLink} aria-label="Go back to home page">
+          <svg 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </Link>
+      </div>
 
-      {/* Show header banner */}
-      <div className={styles.headerSection}>
-        <img src={show.image} alt={show.title} className={styles.showImage} />
-        <div className={styles.showMetadata}>
-          <h1>{show.title}</h1>
-          <p className={styles.description}>{show.description}</p>
+      {/* 2. Main Podcast Detail Banner */}
+      <div className={styles.podcastHeader}>
+        <div className={styles.imageContainer}>
+          {show.image ? (
+            <img src={show.image} alt={show.title} className={styles.coverImage} />
+          ) : (
+            <div className={styles.imagePlaceholder}>Podcast Cover Image</div>
+          )}
+        </div>
+        
+        <div className={styles.podcastInfo}>
+          <h1>{show.title || 'Podcast Title'}</h1>
+          <p className={styles.description}>
+            {show.description || 'A detailed description of this amazing podcast...'}
+          </p>
+          
+          {/* Metadata Grid Layout */}
+          <div className={styles.metadataGrid}>
+            
+            {/* Dynamic Genre Tag loop mapping here */}
+            <div>
+              <span className={styles.label}>GENRES</span>
+              <div className={styles.genresList}>
+                {show.genres?.map((genreId) => (
+                  <GenreTag key={genreId} id={genreId} />
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <span className={styles.label}>LAST UPDATED</span>
+              <span className={styles.value}>
+                {show.updated ? new Date(show.updated).toLocaleDateString('en-US', {
+                  month: 'long', day: 'numeric', year: 'numeric'
+                }) : 'January 15, 2025'}
+              </span>
+            </div>
+            <div>
+              <span className={styles.label}>TOTAL SEASONS</span>
+              <span className={styles.value}>{show.seasons?.length || 0} Seasons</span>
+            </div>
+            <div>
+              <span className={styles.label}>TOTAL EPISODES</span>
+              <span className={styles.value}>
+                {show.seasons?.reduce((acc, s) => acc + (s.episodes?.length || 0), 0) || 0} Episodes
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Accordion dropdown system for seasons */}
-      <div className={styles.seasonsContainer}>
-        <h2>Seasons ({show.seasons?.length || 0})</h2>
+      {/* 3. Season Selection Sub-Header */}
+      <div className={styles.sectionDivider}>
+        <h2>Current Season</h2>
         
-        {show.seasons?.map((season, index) => {
-          const seasonNumber = index + 1;
-          const isOpen = openSeason === seasonNumber;
+        <select 
+          className={styles.seasonSelect}
+          value={selectedSeasonIndex}
+          onChange={(e) => setSelectedSeasonIndex(Number(e.target.value))}
+        >
+          {show.seasons?.map((season, index) => (
+            <option key={season.id || index} value={index}>
+              Season {index + 1}
+            </option>
+          ))}
+        </select>
+      </div>
 
-          return (
-            <div key={season.id || seasonNumber} className={styles.seasonWrapper}>
-              
-              <button 
-                className={styles.seasonToggle} 
-                onClick={() => setOpenSeason(isOpen ? null : seasonNumber)}
-              >
-                <span>Season {seasonNumber}: {season.title} ({season.episodes?.length || 0} Episodes)</span>
-                <span>{isOpen ? '▲' : '▼'}</span>
-              </button>
-
-              {isOpen && (
-                <div className={styles.episodesList}>
-                  {season.episodes?.map((episode) => (
-                    <div key={episode.id || episode.file} className={styles.episodeCard}>
-                      <div className={styles.episodeInfo}>
-                        <h4>{episode.episode}. {episode.title}</h4>
-                        <p>{episode.description}</p>
-                      </div>
-                      
-                      {episode.file && (
-                        <audio controls src={episode.file} className={styles.audioPlayer}>
-                          Your browser does not support audio playback.
-                        </audio>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
+      {/* 4. Active Season Overview Card */}
+      {currentSeason && (
+        <div className={styles.seasonOverviewCard}>
+          <div className={styles.seasonMiniCover}>
+            <span>Season {selectedSeasonIndex + 1}<br/>Cover</span>
+          </div>
+          <div className={styles.seasonOverviewText}>
+            <h3>Season {selectedSeasonIndex + 1}: {currentSeason.title || 'Getting Started'}</h3>
+            <p>{currentSeason.description || 'Introduction to the basics and foundational concepts.'}</p>
+            <div className={styles.seasonMetaTags}>
+              <span>{currentSeason.episodes?.length || 0} Episodes</span>
+              <span>•</span>
+              <span>Released 2024</span>
             </div>
-          );
-        })}
+          </div>
+        </div>
+      )}
+
+      {/* 5. Episode List Rows */}
+      <div className={styles.episodesWrapper}>
+        {currentSeason?.episodes?.map((episode, idx) => (
+          <div key={episode.id || idx} className={styles.episodeRow}>
+            <div className={styles.episodeNumberBox}>
+              <span>EP</span>
+              <span>{episode.episode || idx + 1}</span>
+            </div>
+            
+            <div className={styles.episodeBody}>
+              <h4>Episode {episode.episode || idx + 1}: {episode.title}</h4>
+              <p>{episode.description}</p>
+              
+              <div className={styles.episodeFooter}>
+                <span className={styles.duration}>45 min</span>
+                <span>•</span>
+                <span className={styles.date}>Jan 1, 2024</span>
+                
+                {episode.file && (
+                  <audio src={episode.file} controls className={styles.rowAudio} />
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
+

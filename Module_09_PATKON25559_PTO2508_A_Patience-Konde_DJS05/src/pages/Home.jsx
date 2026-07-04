@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { usePodcast } from '../context/PodcastContext'; 
+import GenreTag from '../components/UI/GenreTag'; // Importing GenreTag component
 import SearchBar from '../components/UI/SearchBar';     
 import GenreFilter from '../components/UI/GenreFilter'; 
 import SortSelect from '../components/UI/SortSelect';   

@@ -12,7 +12,7 @@
  **/
 export async function fetchPodcasts(setPodcasts, setError, setLoading) {
   try {
-    const res = await fetch("https://podcast-api.netlify.app/shows");
+     const res = await fetch("https://podcast-api.netlify.app/shows");
     if (!res.ok) throw new Error(`${res.status}`);
     const data = await res.json();
     setPodcasts(data);
@@ -23,3 +23,29 @@ export async function fetchPodcasts(setPodcasts, setError, setLoading) {
     setLoading(false);
   }
 }
+
+/**
+ * Handles loading, error, and data response for a single show ID
+ * @param {string} id - The specific show ID to fetch
+ * @param {Function} setShow - State setter to update the show data
+ * @param {Function} setError - State setter to update error messages
+ * @param {Function} setLoading - State setter to toggle loading state
+ */
+export async function fetchShowById(id, setShow, setError, setLoading) {
+  try {
+    setLoading(true);
+    setError(null); // Clear previous errors
+    const res = await fetch(`https://netlify.app{id}`);
+    
+    if (!res.ok) throw new Error(`Status: ${res.status}`);
+    
+    const data = await res.json();
+    setShow(data);
+  } catch (err) {
+    console.error("Failed to fetch show details:", err);
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}
+

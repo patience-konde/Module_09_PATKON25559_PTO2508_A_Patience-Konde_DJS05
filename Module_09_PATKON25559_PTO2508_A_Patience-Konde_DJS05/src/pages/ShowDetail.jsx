@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 
 // API and UI Imports (Adjust relative paths if your folders differ)
 import { fetchShowById } from '../../api/fetchData'; 
-import GenreTag from '../components/UI/GenreTag';
+import GenreTag from '../UI/GenreTag';
 import Loading from '../UI/Loading';
 import Error from '../UI/Error';
 import styles from './ShowDetail.module.css';
@@ -13,8 +13,7 @@ export default function ShowDetail() {
   const [show, setShow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [openSeason, setOpenSeason] = useState(null);
-  const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
 
   // Triggers the imported fetch helper whenever the ID changes
   useEffect(() => {
@@ -24,6 +23,8 @@ export default function ShowDetail() {
   if (loading) return <Loading />;
   if (error) return <Error message={error} />;
   if (!show) return <Error message="No show data discovered." />;
+
+  const currentSeason = show.seasons?.[selectedSeasonIndex] || show.seasons?.[0];
 
    return (
     <div className={styles.container}>

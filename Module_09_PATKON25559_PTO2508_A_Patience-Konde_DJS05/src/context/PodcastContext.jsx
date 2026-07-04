@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 /**
  * @typedef Podcast
@@ -27,14 +27,30 @@ export const SORT_OPTIONS = [
  */
 export const PodcastContext = createContext();
 
+export function usePodcast() {
+  const context = useContext(PodcastContext);
+
+  if (!context) {
+    throw new Error("usePodcast must be used within a PodcastProvider");
+  }
+
+  return context;
+}
+
 /**
  * PodcastProvider component wraps children in a context with state for
  * searching, sorting, filtering, and paginating podcast data.
  *
- * @param {{children: React.ReactNode, initialPodcasts: Podcast[]}} props
+ * @param {{children: React.ReactNode, initialPodcasts: Podcast[], loading: boolean, error: string|null, genres: Array}} props
  * @returns {JSX.Element}
  */
-export function PodcastProvider({ children, initialPodcasts }) {
+export function PodcastProvider({
+  children,
+  initialPodcasts = [],
+  loading = false,
+  error = null,
+  genres = [],
+}) {
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState("date-desc");
   const [genre, setGenre] = useState("all");
@@ -117,7 +133,7 @@ export function PodcastProvider({ children, initialPodcasts }) {
 
   useEffect(() => {
     setPage(1);
-  }, [search, sortKey, genre]);
+  }, [search, sortKey, genre, initialPodcasts.length]);
 
   const value = {
     search,
@@ -130,7 +146,11 @@ export function PodcastProvider({ children, initialPodcasts }) {
     setPage,
     totalPages,
     podcasts: paged,
+    allPodcasts: initialPodcasts,
     allPodcastsCount: filtered.length,
+    loading,
+    error,
+    genres,
   };
 
   return (

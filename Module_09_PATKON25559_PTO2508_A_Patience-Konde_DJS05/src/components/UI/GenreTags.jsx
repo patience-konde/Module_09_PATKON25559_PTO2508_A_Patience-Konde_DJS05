@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './GenreTag.module.css'; // Adjust path if your CSS file is grouped elsewhere
+import styles from './GenreTags.module.css';
 
 // Object mapping standardized Netlify Podcast API numerical IDs to text labels
 const GENRE_MAP = {

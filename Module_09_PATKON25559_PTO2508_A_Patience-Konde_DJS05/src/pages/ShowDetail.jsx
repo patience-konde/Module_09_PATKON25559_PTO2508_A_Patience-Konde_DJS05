@@ -1,24 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
-// API and UI Imports (Adjust relative paths if your folders differ)
-import { fetchShowById } from '../../api/fetchData'; 
-import GenreTag from '../UI/GenreTag';
-import Loading from '../UI/Loading';
-import Error from '../UI/Error';
+// API and UI Imports
+import { fetchShowById } from '../api/fetchData';
+import { usePodcast } from '../context/PodcastContext';
+import GenreTag from '../components/UI/GenreTag';
+import Loading from '../components/UI/Loading';
+import Error from '../components/UI/Error';
 import styles from './ShowDetail.module.css';
 
 export default function ShowDetail() {
-  const { id } = useParams(); 
+  const { id } = useParams();
+  const { allPodcasts = [] } = usePodcast();
   const [show, setShow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
 
-  // Triggers the imported fetch helper whenever the ID changes
   useEffect(() => {
+    const fallbackShow = allPodcasts.find((podcast) => String(podcast.id) === String(id));
+
+    if (fallbackShow) {
+      setShow({
+        ...fallbackShow,
+        seasons: fallbackShow.seasons || [],
+      });
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
     fetchShowById(id, setShow, setError, setLoading);
-  }, [id]);
+  }, [id, allPodcasts]);
 
   if (loading) return <Loading />;
   if (error) return <Error message={error} />;

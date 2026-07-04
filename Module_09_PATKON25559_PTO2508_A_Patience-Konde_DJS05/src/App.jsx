@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
-import {browserRouter as Router, Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { PodcastProvider } from "./context/PodcastContext";
 import { fetchPodcasts } from "./api/fetchData";
 import { genres } from "./data";
 import Header from "./components/UI/Header";
-import SearchBar from "./components/Filters/SearchBar";
-import SortSelect from "./components/Filters/SortSelect";
-import GenreFilter from "./components/Filters/GenreFilter";
-import PodcastGrid from "./components/Podcasts/PodcastGrid";
-import Pagination from "./components/UI/Pagination";
 import ShowDetail from "./pages/ShowDetail";
 import Home from "./pages/Home";
-import PodcasTDetail from "./components/Podcasts/PodcastDetail";
-import styles from "./App.module.css";
 
 /**
  * Root component of the Podcast Explorer app.
@@ -28,15 +21,14 @@ export default function App() {
   }, []);
 
   return (
-  <>
-    <Header />
-    <PodcastProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/show/:id" element={<ShowDetail />} />
-        
-      </Routes>
-    </PodcastProvider>
-  </>
-);
+    <>
+      <Header />
+      <PodcastProvider initialPodcasts={podcasts} loading={loading} error={error} genres={genres}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/show/:id" element={<ShowDetail />} />
+        </Routes>
+      </PodcastProvider>
+    </>
+  );
 }

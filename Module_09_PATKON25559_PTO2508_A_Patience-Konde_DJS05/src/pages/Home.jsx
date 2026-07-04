@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { usePodcast } from '../context/PodcastContext'; 
-import GenreTag from '../components/UI/GenreTag'; // Importing GenreTag component
-import SearchBar from '../components/UI/SearchBar';     
-import GenreFilter from '../components/UI/GenreFilter'; 
-import SortSelect from '../components/UI/SortSelect';   
-import Loading from '../components/UI/Loading';         
-import Error from '../components/UI/Error';             
-import GenreTag from '../components/UI/GenreTag'; // Imported your GenreTag file
+import { usePodcast } from '../context/PodcastContext';
+import GenreTag from '../components/UI/GenreTag';
+import SearchBar from '../components/Filters/SearchBar';
+import GenreFilter from '../components/Filters/GenreFilter';
+import SortSelect from '../components/Filters/SortSelect';
+import Loading from '../components/UI/Loading';
+import Error from '../components/UI/Error';
 import styles from './Home.module.css';
 
 export default function Home() {

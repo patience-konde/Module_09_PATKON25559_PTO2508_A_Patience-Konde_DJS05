@@ -28,40 +28,14 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      <Header />
-
-      <PodcastProvider initialPodcasts={podcasts}>
-        <main className={styles.main}>
-          <section className={styles.controls}>
-            <SearchBar />
-            <GenreFilter genres={genres} />
-            <SortSelect />
-          </section>
-
-          {loading && (
-            <div className={styles.messageContainer}>
-              <div className={styles.spinner}></div>
-              <p>Loading podcasts...</p>
-            </div>
-          )}
-
-          {error && (
-            <div className={styles.message}>
-              <div className={styles.error}>
-                Error occurred while fetching podcasts: {error}
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && (
-            <>
-              <PodcastGrid genres={genres} />
-              <Pagination />
-            </>
-          )}
-        </main>
-      </PodcastProvider>
-    </>
-  );
+  <>
+    <Header />
+    <PodcastProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/show/:id" element={<ShowDetail />} />
+      </Routes>
+    </PodcastProvider>
+  </>
+);
 }

@@ -1,0 +1,321 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1a1a1a;
+}
+
+/* 1. Circular Back Link Button */
+.backLinkContainer {
+  margin-bottom: 24px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  color: #4a5568;
+  background-color: #ffffff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.backLink:hover {
+  background-color: #f7fafc;
+  color: #1a202c;
+  border-color: #cbd5e1;
+}
+
+/* 2. Main Podcast Detail Banner Layout */
+.podcastHeader {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 40px;
+  align-items: flex-start;
+}
+
+.imageContainer {
+  flex-shrink: 0;
+}
+
+.coverImage {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.imagePlaceholder {
+  width: 200px;
+  height: 200px;
+  background-color: #edf2f7;
+  color: #718096;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 500;
+  padding: 16px;
+}
+
+.podcastInfo {
+  flex-grow: 1;
+}
+
+.podcastInfo h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: #111827;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #4b5563;
+  margin: 0 0 24px 0;
+}
+
+/* 3. Metadata Columns Grid Layout */
+.metadataGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.genresList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.genresList span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  background-color: #f3f4f6;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+/* 4. Season Selection Sub-Header */
+.sectionDivider {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+.sectionDivider h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+
+.seasonSelect {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.seasonSelect:focus {
+  border-color: #3b82f6;
+}
+
+/* 5. Active Season Overview Card */
+.seasonOverviewCard {
+  display: flex;
+  gap: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 32px;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.seasonMiniCover {
+  width: 80px;
+  height: 80px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.seasonOverviewText {
+  flex-grow: 1;
+}
+
+.seasonOverviewText h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #111827;
+}
+
+.seasonOverviewText p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.seasonMetaTags {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+/* 6. Clean List Item Rows for Episodes */
+.episodesWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.episodeRow {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #f3f4f6;
+  align-items: flex-start;
+}
+
+.episodeRow:last-child {
+  border-bottom: none;
+}
+
+.episodeNumberBox {
+  width: 48px;
+  height: 48px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.episodeNumberBox span:first-child {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.episodeNumberBox span:last-child {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.episodeBody {
+  flex-grow: 1;
+}
+
+.episodeBody h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: #1f2937;
+}
+
+.episodeBody p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #4b5563;
+  margin: 0 0 12px 0;
+}
+
+.episodeFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  flex-wrap: wrap;
+}
+
+.duration, .date {
+  font-weight: 500;
+}
+
+.rowAudio {
+  margin-left: auto;
+  height: 32px;
+  max-width: 260px;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 768px) {
+  .podcastHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .metadataGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .genresList {
+    justify-content: center;
+  }
+  
+  .episodeFooter {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .rowAudio {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}

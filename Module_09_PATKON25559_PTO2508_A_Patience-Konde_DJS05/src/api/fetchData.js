@@ -94,30 +94,67 @@ export async function fetchPodcasts(setPodcasts, setError, setLoading) {
  * @param {Function} setError - State setter to update error messages
  * @param {Function} setLoading - State setter to toggle loading state
  */
-export async function fetchShowById(id, setShow, setError, setLoading) {
+export async function fetchShowById(
+  id,
+  setShow,
+  setError,
+  setLoading,
+  fallbackShow = null
+) {
   try {
     setLoading(true);
     setError(null);
 
     const res = await fetch(`https://podcast-api.netlify.app/shows/${id}`);
 
-    if (!res.ok) throw new Error(`Status: ${res.status}`);
+    if (!res.ok) {
+      if (fallbackShow) {
+        setShow({
+          ...fallbackShow,
+          seasons: Array.isArray(fallbackShow.seasons)
+            ? fallbackShow.seasons.map(season => ({
+                ...season,
+                episodes: Array.isArray(season.episodes) ? season.episodes : [],
+              }))
+            : [],
+        });
+        return;
+      }
+      throw new Error(`Status: ${res.status}`);
+    }
 
     const data = await res.json();
-    setShow(data);
+
+    // Normalize seasons and episodes
+    const normalizedSeasons = Array.isArray(data.seasons)
+      ? data.seasons.map(season => ({
+          ...season,
+          episodes: Array.isArray(season.episodes) ? season.episodes : [],
+        }))
+      : [];
+
+    setShow({
+      ...data,
+      seasons: normalizedSeasons,
+    });
   } catch (err) {
     console.error("Failed to fetch show details:", err);
-    const fallbackShow = FALLBACK_PODCASTS.find(
-      (podcast) => String(podcast.id) === String(id)
-    );
-
     if (fallbackShow) {
-      setShow(fallbackShow);
+      setShow({
+        ...fallbackShow,
+        seasons: Array.isArray(fallbackShow.seasons)
+          ? fallbackShow.seasons.map(season => ({
+              ...season,
+              episodes: Array.isArray(season.episodes) ? season.episodes : [],
+            }))
+          : [],
+      });
     } else {
-      setError("Podcast not found.");
+      setError(err.message || "Failed to fetch show.");
     }
   } finally {
     setLoading(false);
   }
 }
+
 

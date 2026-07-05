@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { FALLBACK_PODCASTS } from "../data"; 
 
 /**
  * @typedef Podcast
@@ -26,6 +27,7 @@ export const SORT_OPTIONS = [
  * Must be used within a <PodcastProvider>.
  */
 export const PodcastContext = createContext();
+
 
 export function usePodcast() {
   const context = useContext(PodcastContext);

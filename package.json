@@ -1,0 +1,9 @@
+{
+  "name": "module-09-workspace-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix ./Module_09_PATKON25559_PTO2508_A_Patience-Konde_DJS05 run dev -- --host 0.0.0.0 --port 5173",
+    "build": "npm --prefix ./Module_09_PATKON25559_PTO2508_A_Patience-Konde_DJS05 run build",
+    "preview": "npm --prefix ./Module_09_PATKON25559_PTO2508_A_Patience-Konde_DJS05 run preview -- --host 0.0.0.0 --port 4173"
+  }
+}

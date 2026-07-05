@@ -1,16 +1,31 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { usePodcast } from '../context/PodcastContext';
-import GenreTag from '../components/UI/GenreTag';
-import SearchBar from '../components/Filters/SearchBar';
-import GenreFilter from '../components/Filters/GenreFilter';
-import SortSelect from '../components/Filters/SortSelect';
-import Loading from '../components/UI/Loading';
-import Error from '../components/UI/Error';
-import styles from './Home.module.css';
+import React from "react";
+import { Link } from "react-router-dom";
+import { usePodcast } from "../context/PodcastContext";
+import GenreTag from "../components/UI/GenreTag";
+import SearchBar from "../components/Filters/SearchBar";
+import GenreFilter from "../components/Filters/GenreFilter";
+import SortSelect from "../components/Filters/SortSelect";
+import Loading from "../components/UI/Loading";
+import Error from "../components/UI/Error";
+import styles from "./Home.module.css";
 
 export default function Home() {
-  const { podcasts, loading, error, genres } = usePodcast();
+  const {
+    podcasts = [],
+    loading,
+    error,
+    genres = [],
+  } = usePodcast();
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <Error message={error.message || "Failed to fetch podcasts."} />
+    );
+  }
 
   return (
     <main className={styles.main}>
@@ -20,35 +35,40 @@ export default function Home() {
         <SortSelect />
       </section>
 
-      {loading && <Loading />}
-      {error && <Error message={error.message || 'Failed to fetch podcasts.'} />}
+      <div className={styles.grid}>
+        {podcasts.map((podcast) => (
+          <div key={podcast.id} className={styles.card}>
+            <img
+              src={podcast.image}
+              alt={podcast.title}
+              className={styles.cardImage}
+            />
 
-      {!loading && !error && (
-        <div className={styles.grid}>
-          {podcasts.map((podcast) => (
-            <div key={podcast.id} className={styles.card}>
-              <img src={podcast.image} alt={podcast.title} className={styles.cardImage} />
-              
-              <div className={styles.cardContent}>
-                <h3>{podcast.title}</h3>
-                
-                {/* Dynamically list Genre Tags if your podcast data contains a genres array */}
-                <div className={styles.genreContainer}>
-                  {podcast.genres?.map((genreId) => (
-                    <GenreTag key={genreId} id={genreId} />
-                  ))}
-                </div>
+            <div className={styles.cardContent}>
+              <h3>{podcast.title}</h3>
 
-                <p>{podcast.description?.substring(0, 100)}...</p>
-                
-                <Link to={`/show/${podcast.id}`} className={styles.viewButton}>
-                  View Show Details
-                </Link>
+              <div className={styles.genreContainer}>
+                {podcast.genres?.map((genreId) => (
+                  <GenreTag key={genreId} id={genreId} />
+                ))}
               </div>
+
+              <p>
+                {podcast.description
+                  ? `${podcast.description.substring(0, 100)}...`
+                  : "No description available."}
+              </p>
+
+              <Link
+                to={`/show/${podcast.id}`}
+                className={styles.viewButton}
+              >
+                View Show Details
+              </Link>
             </div>
-          ))}
-        </div>
-      )}
+          </div>
+        ))}
+      </div>
     </main>
   );
 }

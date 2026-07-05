@@ -71,7 +71,7 @@ const FALLBACK_PODCASTS = [
 export async function fetchPodcasts(setPodcasts, setError, setLoading) {
   try {
     setLoading(true);
-    const res = await fetch("https://podcast-api.netlify.app/shows");
+   const res = await fetch("https://podcast-api.netlify.app");
 
     if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
 
@@ -105,7 +105,7 @@ export async function fetchShowById(
     setLoading(true);
     setError(null);
 
-    const res = await fetch(`https://podcast-api.netlify.app/shows/${id}`);
+   const res = await fetch(`https://podcast-api.netlify.app/id/${id}`);
 
     if (!res.ok) {
       if (fallbackShow) {

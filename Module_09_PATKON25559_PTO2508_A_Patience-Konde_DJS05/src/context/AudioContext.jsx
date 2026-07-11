@@ -13,7 +13,8 @@ export function AudioProvider({ children }) {
 
   const [volume, setVolume] = useState(1);
 
-  // Update progress while audio is playing
+
+  // Track audio progress
   useEffect(() => {
     const audio = audioRef.current;
 
@@ -25,101 +26,249 @@ export function AudioProvider({ children }) {
       setDuration(audio.duration || 0);
     };
 
-    audio.addEventListener("timeupdate", updateProgress);
-    audio.addEventListener("loadedmetadata", updateDuration);
+    const handleEnded = () => {
+      setIsPlaying(false);
+    };
+
+    const handleError = (error) => {
+      console.error("Audio error:", error);
+      setIsPlaying(false);
+    };
+
+
+    audio.addEventListener(
+      "timeupdate",
+      updateProgress
+    );
+
+    audio.addEventListener(
+      "loadedmetadata",
+      updateDuration
+    );
+
+    audio.addEventListener(
+      "ended",
+      handleEnded
+    );
+
+    audio.addEventListener(
+      "error",
+      handleError
+    );
+
 
     return () => {
-      audio.removeEventListener("timeupdate", updateProgress);
-      audio.removeEventListener("loadedmetadata", updateDuration);
+      audio.removeEventListener(
+        "timeupdate",
+        updateProgress
+      );
+
+      audio.removeEventListener(
+        "loadedmetadata",
+        updateDuration
+      );
+
+      audio.removeEventListener(
+        "ended",
+        handleEnded
+      );
+
+      audio.removeEventListener(
+        "error",
+        handleError
+      );
     };
+
   }, []);
 
-  // Play episode
-  const playEpisode = (episode) => {
+
+
+  // Play selected episode
+  const playEpisode = async (episode) => {
     const audio = audioRef.current;
 
+    console.log("Selected episode:", episode);
+    console.log("Audio source:", episode.audio);
+
+
     if (currentEpisode?.id !== episode.id) {
+
+      audio.pause();
+
       audio.src = episode.audio;
+
+      audio.load();
+
       setCurrentEpisode(episode);
+
       setCurrentTime(0);
+
+      setDuration(0);
     }
 
-    audio.play();
-    setIsPlaying(true);
+
+    try {
+
+      await audio.play();
+
+      console.log("Audio started successfully");
+
+      setIsPlaying(true);
+
+    } catch (error) {
+
+      console.error(
+        "Audio playback failed:",
+        error
+      );
+
+      setIsPlaying(false);
+    }
   };
 
-  // Pause episode
+
+
+  // Pause audio
   const pauseEpisode = () => {
+
     audioRef.current.pause();
+
     setIsPlaying(false);
+
   };
 
-  // Toggle play/pause
-  const togglePlay = () => {
+
+
+  // Play / pause toggle
+  const togglePlay = async () => {
+
     if (!currentEpisode) return;
 
+
     if (isPlaying) {
+
       pauseEpisode();
+
     } else {
-      audioRef.current.play();
-      setIsPlaying(true);
+
+      try {
+
+        await audioRef.current.play();
+
+        setIsPlaying(true);
+
+      } catch (error) {
+
+        console.error(
+          "Toggle play failed:",
+          error
+        );
+
+      }
+
     }
+
   };
 
-  // Change progress manually
+
+
+  // Seek audio
   const seekAudio = (time) => {
+
     audioRef.current.currentTime = time;
+
     setCurrentTime(time);
+
   };
 
-  // Change volume
+
+
+  // Volume control
   const changeVolume = (value) => {
+
     audioRef.current.volume = value;
+
     setVolume(value);
+
   };
 
-  // Stop and reset audio
+
+
+  // Reset progress
   const resetAudio = () => {
+
     const audio = audioRef.current;
 
     audio.pause();
+
     audio.currentTime = 0;
 
     setCurrentTime(0);
+
     setIsPlaying(false);
+
   };
+
+
 
   const value = {
+
     audioRef,
+
     currentEpisode,
+
     isPlaying,
+
     currentTime,
+
     duration,
+
     volume,
 
+
     playEpisode,
+
     pauseEpisode,
+
     togglePlay,
+
     seekAudio,
+
     changeVolume,
+
     resetAudio,
+
   };
 
+
   return (
+
     <AudioContext.Provider value={value}>
+
       {children}
+
     </AudioContext.Provider>
+
   );
+
 }
 
+
+
 export function useAudio() {
+
   const context = useContext(AudioContext);
 
+
   if (!context) {
+
     throw new Error(
       "useAudio must be used inside an AudioProvider"
     );
+
   }
 
+
   return context;
+
 }

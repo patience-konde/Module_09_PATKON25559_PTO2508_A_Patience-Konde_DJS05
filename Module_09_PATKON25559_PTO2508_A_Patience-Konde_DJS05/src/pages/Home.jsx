@@ -29,29 +29,41 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+
       <section className={styles.controls}>
         <SearchBar />
         <GenreFilter genres={genres} />
         <SortSelect />
       </section>
 
+
       <div className={styles.grid}>
+
         {podcasts.map((podcast) => (
-          <div key={podcast.id} className={styles.card}>
+
+          <div
+            key={podcast.id}
+            className={styles.card}
+          >
+
             <img
               src={podcast.image}
               alt={podcast.title}
               className={styles.cardImage}
             />
 
+
             <div className={styles.cardContent}>
-              <h3>{podcast.title}</h3>
+
+              <h3>
+                {podcast.title}
+              </h3>
+
 
               <div className={styles.genreContainer}>
                 <GenreTags genres={podcast.genres} />
               </div>
-                ))}
-              </div>
+
 
               <p>
                 {podcast.description
@@ -59,16 +71,22 @@ export default function Home() {
                   : "No description available."}
               </p>
 
+
               <Link
                 to={`/show/${podcast.id}`}
                 className={styles.viewButton}
               >
                 View Show Details
               </Link>
+
             </div>
+
           </div>
+
         ))}
+
       </div>
+
     </main>
   );
 }

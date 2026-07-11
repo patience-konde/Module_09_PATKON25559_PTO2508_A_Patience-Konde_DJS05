@@ -7,6 +7,7 @@ import AudioPlayer from "./Player/AudioPlayer";
 import Header from "./components/UI/Header";
 import ShowDetail from "./pages/ShowDetail";
 import Home from "./pages/Home";
+
 import Style from "./App.module.css";
 
 /**
@@ -29,7 +30,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/show/:id" element={<ShowDetail />} />
-          <Route path="/favorites" element={<Favorites />} />
+        
         </Routes>
         <AudioPlayer />
         

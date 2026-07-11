@@ -10,8 +10,7 @@ import styles from "./AudioPlayer.module.css";
 export default function AudioPlayer() {
   const { currentEpisode } = useAudio();
 
-  // Hide player until an episode is selected
-  if (!currentEpisode) return null;
+  console.log("AudioPlayer currentEpisode:", currentEpisode);
 
   return (
     <div className={styles.audioPlayer}>

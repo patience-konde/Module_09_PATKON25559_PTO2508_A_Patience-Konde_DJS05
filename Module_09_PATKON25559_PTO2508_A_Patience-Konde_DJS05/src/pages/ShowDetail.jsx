@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { usePodcast } from "../context/PodcastContext";
 import { fetchShowById } from "../api/fetchData";
-import GenreTag from "../components/UI/GenreTag";
+import GenreTags from "../components/UI/GenreTags";
 import Loading from "../components/UI/Loading";
 import Error from "../components/UI/Error";
 import "./ShowDetail.css";
@@ -47,112 +47,157 @@ export default function ShowDetail() {
     ) || 0;
 
   return (
-    <div className="container">
+  <div className="container">
+    <div className="backLinkContainer">
       <Link to="/" className="backLink">
-        ← Back
+        ← Back to Podcasts
       </Link>
+    </div>
 
-      <div className="podcastHeader">
+    {/* Podcast Header */}
+    <div className="podcastHeader">
+      <div className="imageContainer">
         <img
           src={show.image}
           alt={show.title}
           className="coverImage"
         />
-
-        <div className="podcastInfo">
-          <h1>{show.title}</h1>
-
-          <p>{show.description}</p>
-
-          <div className="genresList">
-            {show.genres?.map((genreId) => (
-              <GenreTag key={genreId} id={genreId} />
-            ))}
-          </div>
-
-          <p>
-            <strong>Last Updated:</strong>{" "}
-            {show.updated
-              ? new Date(show.updated).toLocaleDateString()
-              : "Unknown"}
-          </p>
-
-          <p>
-            <strong>Seasons:</strong> {show.seasons?.length || 0}
-          </p>
-
-          <p>
-            <strong>Total Episodes:</strong> {totalEpisodes}
-          </p>
-        </div>
       </div>
 
-      {show.seasons?.length > 0 && (
-        <>
-          <aside className="seasonSidebar">
+      <div className="podcastInfo">
+        <h1>{show.title}</h1>
 
-  <h3>Select Season</h3>
+        <p className="description">{show.description}</p>
 
-  <select
-    className="seasonSelect"
-    value={selectedSeasonIndex}
-    onChange={(e) =>
-      setSelectedSeasonIndex(Number(e.target.value))
-    }
-  >
-    {show.seasons.map((season, index) => (
-      <option key={season.id || index} value={index}>
-        Season {index + 1} ({season.episodes?.length || 0} Episodes)
-      </option>
-    ))}
-  </select>
+        <div className="genresList">
+          {show.genres?.map((genreId) => (
+            <GenreTags key={genreId} id={genreId} />
+          ))}
+        </div>
 
-</aside>
+        <div className="metadataGrid">
+          <div>
+            <span className="label">Last Updated</span>
+            <span className="value">
+              {show.updated
+                ? new Date(show.updated).toLocaleDateString()
+                : "Unknown"}
+            </span>
+          </div>
+
+          <div>
+            <span className="label">Seasons</span>
+            <span className="value">
+              {show.seasons?.length || 0}
+            </span>
+          </div>
+
+          <div>
+            <span className="label">Episodes</span>
+            <span className="value">{totalEpisodes}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {show.seasons?.length > 0 && (
+      <div className="contentLayout">
+
+        {/* Episodes */}
+        <section className="episodesSection">
 
           {currentSeason && (
             <>
-              <div className="seasonCard">
+              <div className="seasonOverviewCard">
                 {currentSeason.image && (
-                  <img
-                    src={currentSeason.image}
-                    alt={currentSeason.title}
-                    width="220"
-                  />
+                  <div className="seasonMiniCover">
+                    <img
+                      src={currentSeason.image}
+                      alt={currentSeason.title}
+                    />
+                  </div>
                 )}
 
-                <h2>{currentSeason.title}</h2>
+                <div className="seasonOverviewText">
+                  <h3>{currentSeason.title}</h3>
 
-                <p>{currentSeason.description}</p>
+                  <p>{currentSeason.description}</p>
+
+                  <div className="seasonMetaTags">
+                    <span>
+                      {currentSeason.episodes?.length || 0} Episodes
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <h2>Episodes</h2>
+              <h2 className="episodesTitle">Episodes</h2>
 
-              {currentSeason.episodes?.length > 0 ? (
-                currentSeason.episodes.map((episode, index) => (
-                  <div key={episode.id || index} className="episodeCard">
-                    <h3>
-                      Episode {episode.episode || index + 1}: {episode.title}
-                    </h3>
+              <div className="episodesWrapper">
+                {currentSeason.episodes?.length > 0 ? (
+                  currentSeason.episodes.map((episode, index) => (
+                    <div
+                      key={episode.id || index}
+                      className="episodeRow"
+                    >
+                      <div className="episodeNumberBox">
+                        <span>
+                          {episode.episode || index + 1}
+                        </span>
+                      </div>
 
-                    <p>{episode.description}</p>
+                      <div className="episodeBody">
+                        <h4>{episode.title}</h4>
 
-                    {episode.file && (
-                      <audio controls style={{ width: "100%" }}>
-                        <source
-                          src={episode.file}
-                          type="audio/mpeg"
-                        />
-                      </audio>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <p>No episodes available for this season.</p>
-              )}
+                        <p>{episode.description}</p>
+
+                        {episode.file && (
+                          <audio
+                            controls
+                            className="rowAudio"
+                          >
+                            <source
+                              src={episode.file}
+                              type="audio/mpeg"
+                            />
+                            Your browser does not support audio.
+                          </audio>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No episodes available for this season.</p>
+                )}
+              </div>
             </>
           )}
-        </>
-      )}
-    </div>
-  );
+        </section>
+
+        {/* Sidebar */}
+        <aside className="seasonSidebar">
+          <h3>Select Season</h3>
+
+          <select
+            className="seasonSelect"
+            value={selectedSeasonIndex}
+            onChange={(e) =>
+              setSelectedSeasonIndex(Number(e.target.value))
+            }
+          >
+            {show.seasons.map((season, index) => (
+              <option
+                key={season.id || index}
+                value={index}
+              >
+                Season {index + 1} ({season.episodes?.length || 0} Episodes)
+              </option>
+            ))}
+          </select>
+        </aside>
+
+      </div>
+    )}
+  </div>
+);
 }

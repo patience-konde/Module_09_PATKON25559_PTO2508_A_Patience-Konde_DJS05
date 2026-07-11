@@ -1,0 +1,10 @@
+.volumeControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.volumeSlider {
+  width: 100px;
+  cursor: pointer;
+}

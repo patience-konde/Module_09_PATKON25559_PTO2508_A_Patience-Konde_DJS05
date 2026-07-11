@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { usePodcast } from "../context/PodcastContext";
-import GenreTag from "../components/UI/GenreTag";
+import GenreTags from "../components/UI/GenreTags";
 import SearchBar from "../components/Filters/SearchBar";
 import GenreFilter from "../components/Filters/GenreFilter";
 import SortSelect from "../components/Filters/SortSelect";
@@ -48,8 +48,8 @@ export default function Home() {
               <h3>{podcast.title}</h3>
 
               <div className={styles.genreContainer}>
-                {podcast.genres?.map((genreId) => (
-                  <GenreTag key={genreId} id={genreId} />
+                <GenreTags genres={podcast.genres} />
+              </div>
                 ))}
               </div>
 

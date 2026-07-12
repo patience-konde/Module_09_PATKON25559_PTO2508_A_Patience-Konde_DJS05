@@ -15,13 +15,9 @@ export default function AudioPlayer() {
   return (
     <div className={styles.audioPlayer}>
       <TrackInfo />
-
       <PlayerControls />
-
       <ProgressBar />
-
       <VolumeControl />
-
       <ResetProgress />
     </div>
   );
